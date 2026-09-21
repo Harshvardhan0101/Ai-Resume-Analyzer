@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 // Enable CORS for frontend clients
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000'],
+    origin: true, // Allows all origins, including Vercel domains
     credentials: true,
   })
 );
@@ -50,15 +50,20 @@ app.use((req, res) => {
 // Centralized error handling
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  const key = process.env.GEMINI_API_KEY || '';
-  const isConfigured = Boolean(
-    key.trim() !== '' &&
-    !key.includes('your_api_key_here') &&
-    !key.includes('your_gemini_api_key_here') &&
-    key.length > 20
-  );
-  console.log(`🚀 CareerLens server listening on http://localhost:${PORT}`);
-  console.log(`🔑 Gemini API configured: ${isConfigured}`);
-});
+// Start server if not running on Vercel
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    const key = process.env.GEMINI_API_KEY || '';
+    const isConfigured = Boolean(
+      key.trim() !== '' &&
+      !key.includes('your_api_key_here') &&
+      !key.includes('your_gemini_api_key_here') &&
+      key.length > 20
+    );
+    console.log(`🚀 CareerLens server listening on http://localhost:${PORT}`);
+    console.log(`🔑 Gemini API configured: ${isConfigured}`);
+  });
+}
+
+// Export for Vercel Serverless Functions
+export default app;
