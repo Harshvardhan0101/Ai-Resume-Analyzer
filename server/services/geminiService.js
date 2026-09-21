@@ -99,9 +99,9 @@ export async function analyzeResumeWithGemini(resumeText, jobDescription) {
 
   const genAI = new GoogleGenerativeAI(apiKey.trim());
 
-  // Using gemini-1.5-flash which has low latency, high token limits, and native JSON mode
+  // Using gemini-flash-lite-latest which has low latency, high token limits, and native JSON mode
   const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-flash-lite-latest',
     generationConfig: {
       responseMimeType: 'application/json',
       temperature: 0.15,
